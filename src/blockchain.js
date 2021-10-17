@@ -27,18 +27,24 @@ class Blockchain{
         this.pendingTransactions = []        
     }
 
-    insert(tx){
+    insertIntoPending(tx){
         this.pendingTransactions.push(tx)
     }
 
     addTransaction(tx){
+        if(this.balanceOf(tx.fromAddress) < tx.amount){
+            throw new Error('Not enough balance')
+        }
+        if(tx.amount <= 0){
+            throw new Error('Transaction amount must be higher than 0')
+        }
         if(!tx.fromAddress || !tx.toAddress){
             throw new Error('Transactions must include Sender and Receiver')
         }
         if(!tx.isTransactionValid()){
             throw new Error('Cannot add invalid transaction')
         }
-        this.insert(tx)
+        this.insertIntoPending(tx)
     }
 
     balanceOf(address){
@@ -59,7 +65,7 @@ class Blockchain{
 
     minePendingTransactions(address){
         let new_tx = new Transaction(null, address, this.miningReward)
-        this.insert(new_tx)
+        this.insertIntoPending(new_tx)
 
         let new_block = new Block(this.chainSize, Date.now(), this.pendingTransactions)
         new_block.previousHash = this.latestBlock.hash
@@ -74,7 +80,6 @@ class Blockchain{
             blk.nonce++
             blk.hash = blk.calcHash
         }
-        console.log('Block successfully mined ', blk.hash)
     }
 
     isChainValid(){
