@@ -31,8 +31,14 @@ class Blockchain{
         this.pendingTransactions.push(tx)
     }
 
-    addTransaction(transaction){
-        this.insert(transaction)
+    addTransaction(tx){
+        if(!tx.fromAddress || !tx.toAddress){
+            throw new Error('Transactions must include Sender and Receiver')
+        }
+        if(!tx.isTransactionValid()){
+            throw new Error('Cannot add invalid transaction')
+        }
+        this.insert(tx)
     }
 
     balanceOf(address){
@@ -75,6 +81,8 @@ class Blockchain{
         for(let i = 1; i < this.chainSize; i++){
             let currentBlock = this.chain[i]
             let previousBlock = this.chain[i - 1]
+
+            if(!currentBlock.hasValidTransactions()) return false 
 
             if(currentBlock.hash !== currentBlock.calcHash) return false 
 

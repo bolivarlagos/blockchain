@@ -22,6 +22,13 @@ class Block{
     static get genesis(){
         return new Block(0, Date.now(), 'Genesis Block', 'Null')
     }
+
+    hasValidTransactions(){
+        for(let tx of this.transactions){
+            if(!tx.isTransactionValid()) return false 
+        }
+        return true 
+    }
 }
 
 module.exports = Block 
