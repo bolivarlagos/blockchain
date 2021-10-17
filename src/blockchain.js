@@ -2,7 +2,8 @@ const Block = require('./block')
 
 class Blockchain{
     constructor(){
-        this.chain = [Block.genesis]
+        this.chain = [Block.genesis]  
+        this.dificulty = 2    
     }
 
     get(){
@@ -13,6 +14,18 @@ class Blockchain{
     }
     get latestBlock(){
         return this.chain[this.chainSize - 1]
+    }
+
+    get miningPattern(){
+        return '0'.repeat(this.dificulty)
+    }
+
+    proofOfWork(blk){
+        while(blk.hash.slice(0, this.dificulty) !== this.miningPattern){
+            blk.nonce++
+            blk.hash = blk.calcHash
+        }
+        console.log('Block successfully mined ', blk.hash)
     }
 
     addBlock(new_block){        
