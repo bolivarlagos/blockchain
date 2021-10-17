@@ -6,3 +6,4 @@ const coin = new Blockchain()
 coin.addBlock(new Block(1, Date.now(), ['no transactions']))
 
 console.log(coin)
+console.log(coin.isChainValid())
