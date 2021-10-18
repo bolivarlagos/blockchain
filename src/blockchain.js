@@ -31,6 +31,19 @@ class Blockchain{
         this.pendingTransactions.push(tx)
     }
 
+    allTransaction(addr){
+        let txs = []
+
+        for(let block of this.chain){
+            for(let tx of block.transactions){
+                if(tx.fromAddress === addr || tx.toAddress === addr){
+                    txs.push(tx)
+                }
+            }
+        }
+        return txs 
+    }
+
     addTransaction(tx){
         if(this.balanceOf(tx.fromAddress) < tx.amount){
             throw new Error('Not enough balance')
